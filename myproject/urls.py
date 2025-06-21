@@ -16,8 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from myapp.views.error_view import custom_404
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('myapp.urls')),
 ]
+
+handler404 = custom_404
