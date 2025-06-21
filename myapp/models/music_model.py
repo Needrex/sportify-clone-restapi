@@ -2,6 +2,9 @@ from django.db import models
 from ..utils import custom_upload_to
 import uuid
 from django.contrib.auth.models import User
+import os
+from django.conf import settings
+
 
 class Musician(models.Model):
     id = models.UUIDField(
@@ -30,6 +33,12 @@ class Music(models.Model):
     desk = models.CharField(max_length=250)
     file = models.FileField(upload_to=custom_upload_to)
     date_founded = models.DateField()
+    
+    def save(self, *args, **kwargs):
+        MUSIC_PATH = os.path.join(settings.MEDIA_ROOT, 'music')
+        if MUSIC_PATH and not os.path.exists(MUSIC_PATH):
+            os.makedirs(MUSIC_PATH)
+        super().save(*args, **kwargs)
 
 class HistoryMusic(models.Model):
     id = models.UUIDField(
