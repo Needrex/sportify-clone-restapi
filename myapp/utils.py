@@ -18,7 +18,7 @@ def custom_exception_handler(exc, context):
     if response is not None:
         exc_class = exc.__class__.__name__
         message = str(exc.detail if hasattr(exc, 'detail') else exc)
-        details = response.data if isinstance(response.data, dict) else {"non_field_errors": [message]}
+        details = response.data if isinstance(response.data, dict) else {"non_field_errors": message}
         
         response.data = {
             "success": False,
@@ -44,5 +44,4 @@ def custom_exception_handler(exc, context):
                 }
             }
         
-
-    return response
+        return response

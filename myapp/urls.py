@@ -1,13 +1,17 @@
 from django.urls import path
 from .views import auth_view, music_view
 from rest_framework_simplejwt.views import TokenRefreshView
-from django.conf import settings
-from django.conf.urls.static import static
+from rest_framework.routers import DefaultRouter
+from .views.favoritmusic_view import FavoriteMusicViewSet
+
+router = DefaultRouter()
+router.register(r'favorit-music', FavoriteMusicViewSet, basename='favorite-music')
 
 urlpatterns = [
     # Authentication
     path('register/', auth_view.regis, name='regis'),
     path('login/', auth_view.login, name='login'),
+    path('logout/', auth_view.logout, name='logout'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     
     # Music
@@ -26,3 +30,5 @@ urlpatterns = [
     path("music/play/<str:id_music>/", music_view.music_get, name="music_get"),
     path("music/recomendations/", music_view.recomendations_music, name="music_recomendations")
 ]
+
+urlpatterns += router.urls

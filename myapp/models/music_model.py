@@ -49,3 +49,13 @@ class HistoryMusic(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     music = models.ForeignKey(Music, on_delete=models.CASCADE)
     date_play = models.DateTimeField(auto_now=True)
+    
+class FavoriteMusic(models.Model):
+    id = models.UUIDField(
+        primary_key=True, 
+        default=uuid.uuid4, 
+        editable=False
+    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    music = models.ForeignKey(Music, on_delete=models.CASCADE)
+    create_at = models.DateTimeField(auto_now=True)

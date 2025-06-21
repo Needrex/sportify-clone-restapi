@@ -6,8 +6,10 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework.decorators import permission_classes
 from ..permissions import IsNotAuthenticated
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from rest_framework.exceptions import NotAuthenticated, ValidationError
+from rest_framework.exceptions import ValidationError
+
 
 @api_view(['POST'])
 @permission_classes([IsNotAuthenticated])
@@ -51,3 +53,20 @@ def login(request):
             raise NotAuthenticated('Email, username or password is incorrect!')
     except User.DoesNotExist :
         raise NotAuthenticated('Email, username or password is incorrect!')
+
+@api_view(['POST'])
+def logout(request):
+    try:
+        refresh_token = request.data.get('refresh')
+        if not refresh_token:
+            raise ValidationError('Refresh token is required.')
+        
+        token = RefreshToken(refresh_token)
+        token.blacklist()
+        
+        return Response({
+            'success' : True,
+            'message' : 'Logout succes!'
+        }, status=status.HTTP_205_RESET_CONTENT)
+    except TokenError as e:
+        raise ValidationError(f'Invalid token: {str(e)}')
